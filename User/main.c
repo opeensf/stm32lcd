@@ -86,7 +86,7 @@ const char* REPORT_ABSTRACT_P5_L1 = "applications to chemical";
 const char* REPORT_ABSTRACT_P5_L2 = "and process engineering.";
 
 uint8_t g_report_page = 0;
-const uint8_t MAX_REPORT_PAGES = 2; 
+const uint8_t MAX_REPORT_PAGES = 3; 
 uint8_t g_case3_needs_redraw = 1; 
 
 // 案例5 (收缩矩形) 相关
@@ -314,12 +314,16 @@ void Display_Case2_Update(void) {
     }
 }
 
+
+// 修改案例3显示函数
 void Display_Case3(void) {
     uint16_t y_pos; 
     const uint16_t base_line_height = 16; 
     const uint16_t indent = 5;
     const uint16_t spacing = 2; 
     char page_info[35]; 
+    const uint16_t BOTTOM_LINE_Y = LCD_Y_LENGTH - base_line_height - spacing; // 固定的底部位置
+    const uint16_t TITLE_SPACING = 30; // 标题与正文之间的额外间距
 
     if (g_key1_action_pending && g_current_display_case == 3) { 
         g_report_page = (g_report_page + 1) % MAX_REPORT_PAGES;
@@ -336,59 +340,75 @@ void Display_Case3(void) {
     if(g_current_display_case == 3) { 
         ILI9341_Clear(0, 0, LCD_X_LENGTH, LCD_Y_LENGTH); 
         LCD_SetColors(BLACK, WHITE);
-        y_pos = CASE3_TOP_MARGIN; // 使用宏定义顶部边距
+        y_pos = CASE3_TOP_MARGIN; // 所有页面统一使用顶部边距
 
         if (g_report_page == 0) {
-            LCD_SetFont(&Font16x24); 
+            // 第一页：报告基本信息
+            LCD_SetFont(&Font8x16); 
             ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_TITLE);
-            y_pos += Font16x24.Height + spacing * 2; 
+            
+            // 精确计算标题高度 + 额外间距
+            y_pos += Font16x24.Height + TITLE_SPACING;  
 
             LCD_SetFont(&Font8x16); 
-            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_LINE1_L1);       y_pos += base_line_height + spacing;
-            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_LINE1_L2);       y_pos += base_line_height + spacing;
-            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_LINE1_L3);       y_pos += base_line_height + spacing;
-            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_LINE1_L4);       y_pos += base_line_height + spacing;
-
-            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_LINE2_L1);        y_pos += base_line_height + spacing;
-            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_LINE2_L2);        y_pos += base_line_height + spacing;
-
-            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_LINE3_L1);        y_pos += base_line_height + spacing;
-            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_LINE3_L2);        y_pos += base_line_height + spacing;
-
-            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_LINE4_L1);        y_pos += base_line_height + spacing;
-            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_LINE4_L2);        y_pos += base_line_height + spacing;
-            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_LINE4_L3);        y_pos += base_line_height + spacing * 2;
-
-            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_ABSTRACT_TITLE);  y_pos += base_line_height + spacing;
-            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_ABSTRACT_P1_L1);  y_pos += base_line_height + spacing;
-            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_ABSTRACT_P1_L2);  y_pos += base_line_height + spacing;
-            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_ABSTRACT_P1_L3);  y_pos += base_line_height + spacing;
-            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_ABSTRACT_P1_L4);  y_pos += base_line_height + spacing;
-            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_ABSTRACT_P1_L5);
+            // 只显示关键信息
+            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_LINE2_L1); y_pos += base_line_height + spacing;
+            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_LINE2_L2); y_pos += base_line_height + spacing;
+            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_LINE3_L1); y_pos += base_line_height + spacing;
+            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_LINE3_L2); y_pos += base_line_height + spacing;
+            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_LINE4_L1); y_pos += base_line_height + spacing;
+            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_LINE4_L2); y_pos += base_line_height + spacing;
+            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_LINE4_L3); 
             
-            sprintf(page_info, "Page %d/%d (KEY1 Next->)", g_report_page + 1, MAX_REPORT_PAGES);
-            ILI9341_DispString_EN_CH(indent, LCD_Y_LENGTH - base_line_height - spacing, page_info); 
+            // 固定在底部显示页码
+            if (MAX_REPORT_PAGES == 1) {
+                sprintf(page_info, "Page %d/%d", g_report_page + 1, MAX_REPORT_PAGES);
+            } else {
+                sprintf(page_info, "Page %d/%d (KEY1 Next->)", g_report_page + 1, MAX_REPORT_PAGES);
+            }
+            ILI9341_DispString_EN_CH(indent, BOTTOM_LINE_Y, page_info); 
 
         } else if (g_report_page == 1) {
+            // 第二页：报告摘要（第一部分）
             LCD_SetFont(&Font8x16); 
-            y_pos = CASE3_TOP_MARGIN; // 确保第二页内容也从调整后的Y坐标开始
-            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_ABSTRACT_P2_L1);  y_pos += base_line_height + spacing;
-            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_ABSTRACT_P2_L2);  y_pos += base_line_height + spacing;
-            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_ABSTRACT_P2_L3);  y_pos += base_line_height + spacing;
-            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_ABSTRACT_P2_L4);  y_pos += base_line_height + spacing;
-            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_ABSTRACT_P3_L1);  y_pos += base_line_height + spacing;
-            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_ABSTRACT_P3_L2);  y_pos += base_line_height + spacing;
-            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_ABSTRACT_P3_L3);  y_pos += base_line_height + spacing;
-            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_ABSTRACT_P3_L4);  y_pos += base_line_height + spacing;
-            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_ABSTRACT_P4_L1);  y_pos += base_line_height + spacing;
-            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_ABSTRACT_P4_L2);  y_pos += base_line_height + spacing;
-            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_ABSTRACT_P4_L3);  y_pos += base_line_height + spacing; 
-            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_ABSTRACT_P5_L1);  y_pos += base_line_height + spacing;
-            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_ABSTRACT_P5_L2);  y_pos += base_line_height + spacing;
-         //   ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_ABSTRACT_P6_L1);
+            // 添加摘要标题
+            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_ABSTRACT_TITLE); 
+            y_pos += base_line_height + spacing * 2; // 摘要标题后多加一行间距
             
-            sprintf(page_info, "Page %d/%d (<-KEY1 Prev)", g_report_page + 1, MAX_REPORT_PAGES);
-            ILI9341_DispString_EN_CH(indent, LCD_Y_LENGTH - base_line_height - spacing, page_info);
+            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_ABSTRACT_P1_L1); y_pos += base_line_height + spacing;
+            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_ABSTRACT_P1_L2); y_pos += base_line_height + spacing;
+            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_ABSTRACT_P1_L3); y_pos += base_line_height + spacing;
+            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_ABSTRACT_P1_L4); y_pos += base_line_height + spacing;
+            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_ABSTRACT_P1_L5); y_pos += base_line_height + spacing;
+            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_ABSTRACT_P2_L1); y_pos += base_line_height + spacing;
+            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_ABSTRACT_P2_L2); y_pos += base_line_height + spacing;
+            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_ABSTRACT_P2_L3); y_pos += base_line_height + spacing;
+            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_ABSTRACT_P2_L4); 
+            
+            // 固定在底部显示页码
+            sprintf(page_info, "Page %d/%d (KEY1 Next->)", g_report_page + 1, MAX_REPORT_PAGES);
+            ILI9341_DispString_EN_CH(indent, BOTTOM_LINE_Y, page_info);
+            
+        } else if (g_report_page == 2) {
+            // 第三页：报告摘要（第二部分）
+            LCD_SetFont(&Font8x16); 
+            // 添加摘要标题
+            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_ABSTRACT_TITLE); 
+            y_pos += base_line_height + spacing * 2; // 摘要标题后多加一行间距
+            
+            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_ABSTRACT_P3_L1); y_pos += base_line_height + spacing;
+            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_ABSTRACT_P3_L2); y_pos += base_line_height + spacing;
+            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_ABSTRACT_P3_L3); y_pos += base_line_height + spacing;
+            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_ABSTRACT_P3_L4); y_pos += base_line_height + spacing;
+            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_ABSTRACT_P4_L1); y_pos += base_line_height + spacing;
+            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_ABSTRACT_P4_L2); y_pos += base_line_height + spacing;
+            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_ABSTRACT_P4_L3); y_pos += base_line_height + spacing; 
+            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_ABSTRACT_P5_L1); y_pos += base_line_height + spacing;
+            ILI9341_DispString_EN_CH(indent, y_pos, (char*)REPORT_ABSTRACT_P5_L2);
+            
+            // 固定在底部显示页码
+            sprintf(page_info, "Page %d/%d (KEY1 Restart)", g_report_page + 1, MAX_REPORT_PAGES);
+            ILI9341_DispString_EN_CH(indent, BOTTOM_LINE_Y, page_info);
         }
         g_case3_needs_redraw = 0; 
     }

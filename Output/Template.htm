@@ -3,9 +3,9 @@
 <title>Static Call Graph - [..\..\Output\Template.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image ..\..\Output\Template.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060528: Last Updated: Thu May 29 17:34:01 2025
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060528: Last Updated: Thu May 29 22:42:34 2025
 <BR><P>
-<H3>Maximum Stack Usage =        224 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
+<H3>Maximum Stack Usage =        232 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
 main &rArr; Display_Case3 &rArr; ILI9341_DispString_EN_CH &rArr; ILI9341_DispChar_CH &rArr; GetGBKCode_from_EXFlash &rArr; SPI_FLASH_Init &rArr; GPIO_Init
 <P>
@@ -574,8 +574,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[46]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[76]"></a>Display_Case3</STRONG> (Thumb, 766 bytes, Stack size 56 bytes, main.o(i.Display_Case3))
-<BR><BR>[Stack]<UL><LI>Max Depth = 224<LI>Call Chain = Display_Case3 &rArr; ILI9341_DispString_EN_CH &rArr; ILI9341_DispChar_CH &rArr; GetGBKCode_from_EXFlash &rArr; SPI_FLASH_Init &rArr; GPIO_Init
+<P><STRONG><a name="[76]"></a>Display_Case3</STRONG> (Thumb, 784 bytes, Stack size 64 bytes, main.o(i.Display_Case3))
+<BR><BR>[Stack]<UL><LI>Max Depth = 232<LI>Call Chain = Display_Case3 &rArr; ILI9341_DispString_EN_CH &rArr; ILI9341_DispChar_CH &rArr; GetGBKCode_from_EXFlash &rArr; SPI_FLASH_Init &rArr; GPIO_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[6e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_SetFont
 <LI><a href="#[6d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_SetColors
@@ -1128,7 +1128,7 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> printfa.o(i.__0printf)
 </UL>
 <P><STRONG><a name="[46]"></a>main</STRONG> (Thumb, 242 bytes, Stack size 0 bytes, main.o(i.main))
-<BR><BR>[Stack]<UL><LI>Max Depth = 224<LI>Call Chain = main &rArr; Display_Case3 &rArr; ILI9341_DispString_EN_CH &rArr; ILI9341_DispChar_CH &rArr; GetGBKCode_from_EXFlash &rArr; SPI_FLASH_Init &rArr; GPIO_Init
+<BR><BR>[Stack]<UL><LI>Max Depth = 232<LI>Call Chain = main &rArr; Display_Case3 &rArr; ILI9341_DispString_EN_CH &rArr; ILI9341_DispChar_CH &rArr; GetGBKCode_from_EXFlash &rArr; SPI_FLASH_Init &rArr; GPIO_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[98]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ILI9341_Init
 <LI><a href="#[97]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ILI9341_GramScan
